@@ -40,6 +40,8 @@ public class Window extends SortFrame {
     boolean firstTriggered;
     int[] timers = {0, 0, 0, 0, 0};
     boolean[] pushArmed = {false, false, false, false, false};
+    boolean[] leftEye = {false, false, false, false, false};
+    
     //Dont push until 5 ticks after eye gave false
 
     @Override
@@ -75,6 +77,7 @@ public class Window extends SortFrame {
         //Handle boxes that were not scanned
         if (inducted > scanned) {
             Box b = new Box(5, "MISSED");
+            b.position = 8;
             belt.add(b);
             scanned = inducted;
         }
@@ -103,78 +106,91 @@ public class Window extends SortFrame {
         for (int i = 0; i < belt.size(); i++) {
             switch (belt.get(i).destination) {
                 case 1:
-                    if (belt.get(i).position >= 95 && belt.get(i).position <= 101) {
+                    if (belt.get(i).position >= 100 && belt.get(i).position <= 110 && inputs.getLane1PhotoEyeState()) {
                         belt.remove(i);
                         pushArmed[0] = true;
                     }
                     break;
                 case 2:// s->1 (100tks); 1->2 (total: 124, d:24); 2->3 (t: 159, d: 34); 3->4 (t: 183, d:24); 4->5 (t:218, d: 35);
-                    if (belt.get(i).position >= 120 && belt.get(i).position <= 126) {
+                    if (belt.get(i).position >= 124 && belt.get(i).position <= 134 && inputs.getLane2PhotoEyeState()) {
                         belt.remove(i);
                         pushArmed[1] = true;
                     }
                     break;
                 case 3:
-                    if (belt.get(i).position >= 154 && belt.get(i).position <= 161) {
+                    if (belt.get(i).position >= 159 && belt.get(i).position <= 169 && inputs.getLane3PhotoEyeState()) {
                         belt.remove(i);
                         pushArmed[2] = true;
                     }
                     break;
                 case 4:
-                    if (belt.get(i).position >= 180 && belt.get(i).position <= 185) {
+                    if (belt.get(i).position >= 183 && belt.get(i).position <= 194 && inputs.getLane4PhotoEyeState()) {
                         belt.remove(i);
                         pushArmed[3] = true;
                     }
                     break;
                 case 5:
-                    if (belt.get(i).position >= 215 && belt.get(i).position <= 220) {
+                    if (belt.get(i).position >= 218 && belt.get(i).position <= 225 && inputs.getLane5PhotoEyeState()) {
                         belt.remove(i);
                         pushArmed[4] = true;
                     }
                 break;
             }
+            int l1centertime = 3;
+            int l2centertime = 8;
+            int l3centertime = 7;
+            int l4centertime = 4;
+            int l5centertime = 5;
             if(pushArmed[0] && !inputs.getLane1PhotoEyeState()){
-                if(timers[0] == 5){
+                if(timers[0] == l1centertime){
                     timers[0] = 0;
                     pushers[0].push();
+                    pushArmed[0] = false;
                 }else{
                     timers[0]++;
                 }
             }
-            
             if(pushArmed[1] && !inputs.getLane2PhotoEyeState()){
-                if(timers[1] == 5){
+                if(timers[1] == l2centertime){
                     timers[1] = 0;
                     pushers[1].push();
+                    pushArmed[1] = false;
                 }else{
                     timers[1]++;
                 }
             }
             if(pushArmed[2] && !inputs.getLane3PhotoEyeState()){
-                if(timers[2] == 5){
+                if(timers[2] == l3centertime){
                     timers[2] = 0;
-                    pushers[2].push();;
+                    pushers[2].push();
+                    pushArmed[2] = false;
                 }else{
                     timers[2]++;
                 }
             }
             if(pushArmed[3] && !inputs.getLane4PhotoEyeState()){
-                if(timers[3] == 5){
+                if(timers[3] == l4centertime){
                     timers[3] = 0;
                     pushers[3].push();
+                    pushArmed[3] = false;
                 }else{
                     timers[3]++;
                 }
             }
             if(pushArmed[4] && !inputs.getLane5PhotoEyeState()){
-                if(timers[4] == 5){
+                if(timers[4] == l5centertime){
                     timers[4] = 0;
                     pushers[4].push();
+                    pushArmed[4] = false;
                 }else{
                     timers[4]++;
                 }
             }
             belt.get(i).position++;
+        }
+        
+        for(int i = 0; i < 5; i++){
+            pushers[i].updatePusher();
         }
 
         //see if BADREAD exists, send to five

@@ -12,34 +12,42 @@ import interfaces.OutputInterface;
  * @author delucaa.2022
  */
 public class Pusher {
+
     int id;
     OutputInterface outputs;
-    Pusher(int id, OutputInterface outputs){
+
+    Pusher(int id, OutputInterface outputs) {
         this.id = id;
         this.outputs = outputs;
     }
-    
-    
-    int pushTimer = 0;
+
+    int pushTimer = 1;
     ////////////////////////////////////
     //Speed controls////////////////////
-    int pushDelay = 9;
+    int pushDelay = 12;
     int holdDelay = 5;//
     ////////////////////////////////////
     ////////////////////////////////////
+    public void updatePusher(){
+        if(pushTimer > 1){
+            push();
+        }
+    }
     public void push() {
+        //System.out.println("IDPUSH: " + id);
+
         if (pushTimer != 0 && pushTimer <= pushDelay) {
-//            System.out.println("///////PUSH///////");
+            System.out.println("///////PUSH///////");
             pushTimer++;
-//            System.out.println(id + ": -|");
-//            System.out.println(id + ": >>>");
-//            System.out.println("timer: "+pushTimer);
+            System.out.println(id + ": -|");
+            System.out.println(id + ": >>>");
+            System.out.println("timer: " + pushTimer);
         }
 
         if (pushTimer >= pushDelay && pushTimer <= pushDelay + holdDelay) {
-//            System.out.println(id + ": ---|");
-//            System.out.println(id + ": ===");
-//            System.out.println("timer: "+pushTimer);
+            System.out.println(id + ": ---|");
+            System.out.println(id + ": ===");
+            System.out.println("timer: " + pushTimer);
             switch (id) {
                 case 1:
                     outputs.setPusher1State(true);
@@ -59,10 +67,11 @@ public class Pusher {
             }
             pushTimer += 1;
         }
-        if (pushTimer == pushDelay + holdDelay) {
-//            System.out.println(id + ": |<-");
-//            System.out.println(id + ": <<<");
-//            System.out.println("timer: "+pushTimer);
+
+        if (pushTimer == pushDelay + holdDelay){
+                System.out.println(id + ": |<-");
+            System.out.println(id + ": <<<");
+            System.out.println("timer: " + pushTimer);
             switch (id) {
                 case 1:
                     outputs.setPusher1State(false);
@@ -80,9 +89,10 @@ public class Pusher {
                     outputs.setPusher5State(false);
                     break;
             }
-            pushTimer = 0;
-//            System.out.println("//////////////////");
-
+            pushTimer = 1;
+    //            System.out.println("//////////////////");
         }
+
     }
 }
+
