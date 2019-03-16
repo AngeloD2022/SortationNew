@@ -46,6 +46,9 @@ public class Window extends SortFrame {
 
     @Override
     public void onUpdate() {
+        for(int i = 0; i < 5; i++){
+            pushers[i].updatePusher();
+        }
         //KEEP CHANGING SPEED, MISSED BOXES, BAD READS, and MISSED INDUCTS ALL IN MIND
         //Add boxes to ArrayList
         if (scanner.read != null) {
@@ -104,6 +107,7 @@ public class Window extends SortFrame {
 
         //Push Boxes in their respective lanes
         for (int i = 0; i < belt.size(); i++) {
+            belt.get(i).position++;
             switch (belt.get(i).destination) {
                 case 1:
                     if (belt.get(i).position >= 100 && belt.get(i).position <= 110 && inputs.getLane1PhotoEyeState()) {
@@ -130,17 +134,19 @@ public class Window extends SortFrame {
                     }
                     break;
                 case 5:
-                    if (belt.get(i).position >= 218 && belt.get(i).position <= 225 && inputs.getLane5PhotoEyeState()) {
+                    if (belt.get(i).position >= 218 && belt.get(i).position <= 230 && inputs.getLane5PhotoEyeState()) {
                         belt.remove(i);
                         pushArmed[4] = true;
                     }
                 break;
             }
-            int l1centertime = 3;
-            int l2centertime = 8;
-            int l3centertime = 7;
+            int l1centertime = 4;
+            int l2centertime = 4;
+            int l3centertime = 4;
             int l4centertime = 4;
-            int l5centertime = 5;
+            int l5centertime = 4;
+            
+            
             if(pushArmed[0] && !inputs.getLane1PhotoEyeState()){
                 if(timers[0] == l1centertime){
                     timers[0] = 0;
@@ -186,12 +192,10 @@ public class Window extends SortFrame {
                     timers[4]++;
                 }
             }
-            belt.get(i).position++;
+            
         }
         
-        for(int i = 0; i < 5; i++){
-            pushers[i].updatePusher();
-        }
+        
 
         //see if BADREAD exists, send to five
         //see if there is a box entry without induct hit
